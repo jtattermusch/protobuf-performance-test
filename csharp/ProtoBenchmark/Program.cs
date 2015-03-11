@@ -11,6 +11,10 @@ namespace ProtoBenchmark
         {
             RunBechmark("BenchmarkSerializePerson", BenchmarkSerializePerson, 10 * 1000, 10 * 1000 * 1000);
 
+            RunBechmark("BenchmarkSerializeNewPerson", BenchmarkSerializeNewPerson, 10 * 1000, 10 * 1000 * 1000);
+
+            RunBechmark("BenchmarkSerializeJustEmailPerson", BenchmarkSerializeJustEmailPerson, 10 * 1000, 10 * 1000 * 1000);
+
             RunBechmark("BenchmarkSerializeJustIdPerson", BenchmarkSerializeJustIdPerson, 10 * 1000, 10 * 1000 * 1000);
 
             RunBechmark("BenchmarkSerializeJustIdPersonToPreallocatedArray", BenchmarkSerializeJustIdPersonToPreallocatedArray, 10 * 1000, 10 * 1000 * 1000);
@@ -75,6 +79,31 @@ namespace ProtoBenchmark
             }
 
             return person.SerializedSize * (long) iterations;
+        }
+
+        private static long BenchmarkSerializeNewPerson(int iterations)
+        {
+            byte[] buffer = null;
+            for (int i = 0; i < iterations; i++)
+            {
+                var person = CreatePerson();
+                buffer = person.ToByteArray();
+            }
+
+            return buffer.LongLength * (long)iterations;
+        }
+
+        private static long BenchmarkSerializeJustEmailPerson(int iterations)
+        {
+            var person = Person.CreateBuilder().SetEmail("jdoe@example.com").Build();
+
+            byte[] buffer = null;
+            for (int i = 0; i < iterations; i++)
+            {
+                buffer = person.ToByteArray();
+            }
+
+            return person.SerializedSize * (long)iterations;
         }
 
         private static long BenchmarkSerializeJustIdPerson(int iterations)

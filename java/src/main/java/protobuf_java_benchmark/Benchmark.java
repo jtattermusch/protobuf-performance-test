@@ -20,6 +20,18 @@ public class Benchmark {
 			}
 		}, 10 * 1000, 10 * 1000 * 1000);
 		
+		runBechmark("benchmarkSerializeNewPerson", new Function<Integer, Long>() {
+			public Long apply(Integer iterations) {
+				return benchmarkSerializeNewPerson(iterations);
+			}
+		}, 10 * 1000, 10 * 1000 * 1000);
+		
+		runBechmark("benchmarkSerializeJustEmailPerson", new Function<Integer, Long>() {
+			public Long apply(Integer iterations) {
+				return benchmarkSerializeJustEmailPerson(iterations);
+			}
+		}, 10 * 1000, 10 * 1000 * 1000);
+		
 		runBechmark("benchmarkSerializeJustIdPerson", new Function<Integer, Long>() {
 			public Long apply(Integer iterations) {
 				return benchmarkSerializeJustIdPerson(iterations);
@@ -104,6 +116,27 @@ public class Benchmark {
 
 	private static long benchmarkSerializePerson(int iterations) {
 		Person person = createPerson();
+
+		byte[] buffer = null;
+		for (int i = 0; i < iterations; i++) {
+			buffer = person.toByteArray();
+		}
+
+		return person.getSerializedSize() * (long) iterations;
+	}
+	
+	private static long benchmarkSerializeNewPerson(int iterations) {
+		byte[] buffer = null;
+		for (int i = 0; i < iterations; i++) {
+			Person person = createPerson();
+			buffer = person.toByteArray();
+		}
+
+		return buffer.length * (long) iterations;
+	}
+	
+	private static long benchmarkSerializeJustEmailPerson(int iterations) {
+		Person person = Person.newBuilder().setEmail("jdoe@example.com").build();
 
 		byte[] buffer = null;
 		for (int i = 0; i < iterations; i++) {
