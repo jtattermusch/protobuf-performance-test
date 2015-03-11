@@ -8,6 +8,5 @@ public class PerformanceTest
     public void runBenchmark()
     {
     	Benchmark.main(new String[] {});
-    	
     }
 }
